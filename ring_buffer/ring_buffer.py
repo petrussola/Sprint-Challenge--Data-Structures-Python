@@ -6,7 +6,7 @@ class RingBuffer:
         self.capacity = capacity
         self.current = 0
         self.storage = DoublyLinkedList()
-        
+
     def append(self, item):
         if self.capacity == self.current:
             max_value = self.storage.get_max()
@@ -52,10 +52,49 @@ class RingBuffer:
 
 class ArrayRingBuffer:
     def __init__(self, capacity):
-        pass
+        self.capacity = capacity
+        self.current = 0
+        self.storage = [None] * capacity
 
     def append(self, item):
-        pass
+        if self.capacity == self.current:
+            max_value = self.storage[0]
+            max_index = 0
+            for index, val in enumerate(self.storage):
+                if val > max_value:
+                    max_value = val
+                    max_index = index
+            if max_value == self.storage[-1]:
+                self.storage[0] = item
+            elif max_value == self.storage[-2]:
+                self.storage[-1] = item
+            else:
+                self.storage[max_index + 1] = item
+
+        else:
+            self.current += 1
+            index = 0
+            for el in self.storage:
+                if el != None:
+                    index += 1
+            self.storage[index] = item
 
     def get(self):
-        pass
+        container = []
+        for i in range(len(self.storage)):
+            if self.storage[i] != None:
+                container.append(self.storage[i])
+        return container
+
+
+# ring = ArrayRingBuffer(5)
+# ring.append('a')
+# ring.append('b')
+# ring.append('c')
+# ring.append('d')
+# ring.append('e')
+# ring.append('f')
+# ring.append('g')
+# print(len(ring.storage), "<<<< len")
+# print(ring.get(), "<<<< container")
+# print(ring.storage, "<<<< ring.storage")
